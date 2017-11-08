@@ -5,9 +5,10 @@ import (
 	s "strings"
 	"math/rand"
 	"time"
+	"fmt"
 )
 
-
+var initialized bool = false
 var connectives []byte
 var lastNames []byte
 var words []byte
@@ -25,21 +26,10 @@ func check(e error) {
     }
 }
 
-func Generate() string {
-	seed := rand.NewSource(time.Now().UnixNano())
-	random := rand.New(seed)
+
+func initialize() {
 	
-	i_lastNames := random.Intn(len(aLastNames))
-	i_words := random.Intn(len(aWords))
-	i_connectives := random.Intn(len(aConnectives))
-
-	theWord := string(aConnectives[i_connectives]) + "-" + string(aLastNames[i_lastNames]) + "-" + string(aWords[i_words])
-
-	return s.ToLower(theWord)
-
-}
-
-func Init() {
+	fmt.Println("Initializing the words...")
 
 	connectives, err = ioutil.ReadFile("connectives.txt")
 	check(err)
@@ -53,4 +43,26 @@ func Init() {
 	check(err)
 	aLastNames = s.Split(string(lastNames), "\n")
 
+	initialized = true
+	
 }
+
+
+func Generate() string {
+
+	if (!initialized){
+		initialize()
+	}
+	seed := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(seed)
+	
+	i_lastNames := random.Intn(len(aLastNames))
+	i_words := random.Intn(len(aWords))
+	i_connectives := random.Intn(len(aConnectives))
+
+	theWord := string(aConnectives[i_connectives]) + "-" + string(aLastNames[i_lastNames]) + "-" + string(aWords[i_words])
+
+	return s.ToLower(theWord)
+
+}
+
