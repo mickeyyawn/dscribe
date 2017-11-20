@@ -1,11 +1,12 @@
 package dscribe
 
 import (
-	"io/ioutil"
+	//"io/ioutil"
 	s "strings"
 	"math/rand"
 	"time"
 	"fmt"
+	"github.com/gobuffalo/packr"
 )
 
 var initialized bool = false
@@ -28,20 +29,26 @@ func check(e error) {
 
 
 func initialize() {
+
+	box := packr.NewBox("./words")
 	
 	fmt.Println("Initializing the words...")
 
-	connectives, err = ioutil.ReadFile("connectives.txt")
-	check(err)
-	aConnectives = s.Split(string(connectives), "\n")
+	connectives := box.String("connectives.txt")
 
-	words, err = ioutil.ReadFile("words.txt")
-	check(err)
-	aWords = s.Split(string(words), "\n")
+	//connectives, err = ioutil.ReadFile("connectives.txt")
+	//check(err)
+	aConnectives = s.Split(connectives, "\n")
 
-	lastNames, err = ioutil.ReadFile("last-names.txt")
-	check(err)
-	aLastNames = s.Split(string(lastNames), "\n")
+	//words, err = ioutil.ReadFile("words.txt")
+	//check(err)
+	words := box.String("words.txt")
+	aWords = s.Split(words, "\n")
+
+	//lastNames, err = ioutil.ReadFile("last-names.txt")
+	//check(err)
+	lastNames := box.String("last-names.txt")
+	aLastNames = s.Split(lastNames, "\n")
 
 	initialized = true
 	
